@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Her Out</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ffe5e5 0%, #ffd1dc 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .cat-container {
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cat-image {
+      width: 250px;
+      height: 250px;
+      background: white;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cat-emoji {
+      font-size: 180px;
+      line-height: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 80px;
+      color: #ffb3d9;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .heart-1 {
+      top: 20px;
+      left: 30px;
+      animation-delay: 0s;
+    }
+
+    .heart-2 {
+      bottom: 30px;
+      right: 40px;
+      animation-delay: 1s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-10px) scale(1.1);
+      }
+    }
+
+    .question {
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+      margin: 30px 0 15px 0;
+    }
+
+    .hindi-text {
+      font-size: 18px;
+      color: #666;
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 15px 40px;
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      min-width: 120px;
+    }
+
+    .btn-yes {
+      background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      color: white;
+    }
+
+    .btn-yes:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+    }
+
+    .btn-yes:active {
+      transform: translateY(0);
+    }
+
+    .btn-no {
+      background: #e0e0e0;
+      color: #666;
+    }
+
+    .btn-no:hover {
+      background: #d0d0d0;
+      transform: translateY(-2px);
+    }
+
+    .btn-no:active {
+      transform: translateY(0);
+    }
+
+    /* Float animation for No button */
+    @keyframes floatAway {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(10px, -10px) scale(1.05);
+      }
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    .btn-no.moving {
+      animation: floatAway 0.5s ease-out;
+    }
+
+    /* Allow No button to move on mobile but ensure it stays in bounds */
+    @media (max-width: 768px) {
+      .btn-no {
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        will-change: transform, left, top;
+      }
+    }
+
+    /* Confetti animation */
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #ff6b9d;
+      animation: confetti-fall 3s linear forwards;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    /* Custom Modal Design */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-box {
+      background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 100%);
+      border-radius: 12px;
+      padding: 0;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.3s ease;
+      overflow: hidden;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-title {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .modal-body {
+      padding: 25px 20px;
+      text-align: center;
+    }
+
+    .modal-message {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .modal-footer {
+      padding: 15px 20px;
+      display: flex;
+      justify-content: flex-end;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-ok {
+      background: linear-gradient(135deg, #4a9eff 0%, #357abd 100%);
+      color: #ffffff;
+      border: 1px solid #2d6ba3;
+      padding: 8px 24px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+    }
+
+    .btn-ok:hover {
+      background: linear-gradient(135deg, #5aaaff 0%, #4080c5 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(74, 158, 255, 0.4);
+    }
+
+    .btn-ok:active {
+      transform: translateY(0);
+    }
+
+    /* Romantic Page Styles */
+    .romantic-page {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 3000;
+      overflow: hidden;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .romantic-page.show {
+      display: flex;
+    }
+
+    .floating-hearts {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .floating-heart {
+      position: absolute;
+      font-size: 30px;
+      animation: floatHeart 8s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.7;
+      }
+      90% {
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .romantic-content {
+      text-align: center;
+      z-index: 10;
+      padding: 40px 20px;
+      max-width: 600px;
+      animation: slideInUp 0.8s ease;
+    }
+
+    @keyframes slideInUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .romantic-title {
+      font-size: 48px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 2px 2px 10px rgba(255, 107, 157, 0.5);
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .romantic-message {
+      font-size: 24px;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+      margin: 20px 0;
+      line-height: 1.6;
+    }
+
+    .romantic-subtitle {
+      font-size: 20px;
+      color: #fff;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+      margin-top: 30px;
+      font-style: italic;
+    }
+
+    .big-heart {
+      font-size: 120px;
+      margin: 30px 0;
+      animation: heartbeat 1.5s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% {
+        transform: scale(1);
+      }
+      25% {
+        transform: scale(1.2);
+      }
+      50% {
+        transform: scale(1);
+      }
+      75% {
+        transform: scale(1.15);
+      }
+    }
+
+    .romantic-quote {
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 40px;
+      font-style: italic;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .sparkles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% {
+        opacity: 0;
+        transform: scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    /* Responsive Design for All Devices */
+    
+    /* Large Tablets and Small Desktops (768px - 1024px) */
+    @media (max-width: 1024px) {
+      .container {
+        max-width: 600px;
+      }
+
+      .cat-image {
+        width: 220px;
+        height: 220px;
+      }
+
+      .cat-emoji {
+        font-size: 160px;
+      }
+
+      .question {
+        font-size: 30px;
+      }
+
+      .romantic-title {
+        font-size: 42px;
+      }
+
+      .romantic-message {
+        font-size: 22px;
+      }
+    }
+
+    /* Tablets (600px - 768px) */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      .cat-image {
+        width: 200px;
+        height: 200px;
+      }
+
+      .cat-emoji {
+        font-size: 150px;
+      }
+
+      .heart {
+        font-size: 60px;
+      }
+
+      .question {
+        font-size: 28px;
+        margin: 25px 0 12px 0;
+      }
+
+      .hindi-text {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+
+      .buttons {
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .btn {
+        padding: 14px 35px;
+        font-size: 17px;
+        min-width: 110px;
+      }
+
+      .modal-box {
+        max-width: 450px;
+        width: 90%;
+      }
+
+      .modal-header {
+        padding: 12px 18px;
+      }
+
+      .modal-body {
+        padding: 20px 18px;
+      }
+
+      .modal-message {
+        font-size: 17px;
+      }
+
+      .romantic-content {
+        padding: 30px 15px;
+        max-width: 100%;
+      }
+
+      .romantic-title {
+        font-size: 38px;
+        margin-bottom: 15px;
+      }
+
+      .romantic-message {
+        font-size: 20px;
+        margin: 15px 0;
+      }
+
+      .romantic-subtitle {
+        font-size: 18px;
+        margin-top: 25px;
+      }
+
+      .big-heart {
+        font-size: 100px;
+        margin: 25px 0;
+      }
+
+      .romantic-quote {
+        font-size: 16px;
+        margin-top: 30px;
+      }
+
+      .floating-heart {
+        font-size: 25px;
+      }
+    }
+
+    /* Mobile Devices (480px - 600px) */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      .cat-container {
+        margin: 20px 0;
+      }
+
+      .cat-image {
+        width: 180px;
+        height: 180px;
+      }
+
+      .cat-emoji {
+        font-size: 130px;
+      }
+
+      .heart {
+        font-size: 50px;
+      }
+
+      .heart-1 {
+        top: 15px;
+        left: 20px;
+      }
+
+      .heart-2 {
+        bottom: 20px;
+        right: 25px;
+      }
+
+      .question {
+        font-size: 24px;
+        margin: 20px 0 10px 0;
+      }
+
+      .hindi-text {
+        font-size: 15px;
+        margin-bottom: 25px;
+      }
+
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 250px;
+        padding: 14px 30px;
+        font-size: 16px;
+        min-width: auto;
+      }
+
+      .modal-box {
+        width: 90%;
+        max-width: 100%;
+        margin: 20px;
+      }
+
+      .modal-header {
+        padding: 12px 15px;
+      }
+
+      .modal-title {
+        font-size: 13px;
+      }
+
+      .modal-body {
+        padding: 20px 15px;
+      }
+
+      .modal-message {
+        font-size: 16px;
+      }
+
+      .modal-footer {
+        padding: 12px 15px;
+      }
+
+      .btn-ok {
+        padding: 10px 20px;
+        font-size: 13px;
+      }
+
+      .romantic-content {
+        padding: 25px 15px;
+      }
+
+      .romantic-title {
+        font-size: 32px;
+        margin-bottom: 15px;
+      }
+
+      .romantic-message {
+        font-size: 18px;
+        margin: 12px 0;
+      }
+
+      .romantic-subtitle {
+        font-size: 16px;
+        margin-top: 20px;
+      }
+
+      .big-heart {
+        font-size: 80px;
+        margin: 20px 0;
+      }
+
+      .romantic-quote {
+        font-size: 14px;
+        margin-top: 25px;
+        padding: 0 10px;
+      }
+
+      .floating-heart {
+        font-size: 22px;
+      }
+
+      .sparkle {
+        width: 3px;
+        height: 3px;
+      }
+    }
+
+    /* Small Mobile Devices (< 480px) */
+    @media (max-width: 480px) {
+      body {
+        padding: 8px;
+      }
+
+      .cat-container {
+        margin: 15px 0;
+      }
+
+      .cat-image {
+        width: 160px;
+        height: 160px;
+        border-radius: 15px;
+      }
+
+      .cat-emoji {
+        font-size: 110px;
+      }
+
+      .heart {
+        font-size: 40px;
+      }
+
+      .heart-1 {
+        top: 10px;
+        left: 15px;
+      }
+
+      .heart-2 {
+        bottom: 15px;
+        right: 20px;
+      }
+
+      .question {
+        font-size: 20px;
+        margin: 15px 0 8px 0;
+      }
+
+      .hindi-text {
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .buttons {
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .btn {
+        max-width: 100%;
+        padding: 12px 25px;
+        font-size: 15px;
+        border-radius: 20px;
+      }
+
+      .modal-box {
+        width: 95%;
+        border-radius: 10px;
+      }
+
+      .modal-header {
+        padding: 10px 12px;
+      }
+
+      .modal-title {
+        font-size: 12px;
+      }
+
+      .modal-body {
+        padding: 18px 12px;
+      }
+
+      .modal-message {
+        font-size: 15px;
+      }
+
+      .modal-footer {
+        padding: 10px 12px;
+      }
+
+      .btn-ok {
+        padding: 8px 18px;
+        font-size: 12px;
+        border-radius: 18px;
+      }
+
+      .romantic-content {
+        padding: 20px 12px;
+      }
+
+      .romantic-title {
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+
+      .romantic-message {
+        font-size: 16px;
+        margin: 10px 0;
+      }
+
+      .romantic-subtitle {
+        font-size: 15px;
+        margin-top: 15px;
+      }
+
+      .big-heart {
+        font-size: 70px;
+        margin: 15px 0;
+      }
+
+      .romantic-quote {
+        font-size: 13px;
+        margin-top: 20px;
+        padding: 0 8px;
+        line-height: 1.5;
+      }
+
+      .floating-heart {
+        font-size: 20px;
+      }
+
+      .sparkle {
+        width: 2px;
+        height: 2px;
+      }
+    }
+
+    /* Extra Small Devices (< 360px) */
+    @media (max-width: 360px) {
+      .cat-image {
+        width: 140px;
+        height: 140px;
+      }
+
+      .cat-emoji {
+        font-size: 95px;
+      }
+
+      .heart {
+        font-size: 35px;
+      }
+
+      .question {
+        font-size: 18px;
+      }
+
+      .hindi-text {
+        font-size: 13px;
+      }
+
+      .btn {
+        padding: 11px 20px;
+        font-size: 14px;
+      }
+
+      .romantic-title {
+        font-size: 24px;
+      }
+
+      .romantic-message {
+        font-size: 15px;
+      }
+
+      .big-heart {
+        font-size: 60px;
+      }
+
+      .romantic-quote {
+        font-size: 12px;
+      }
+    }
+
+    /* Landscape Orientation for Mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .cat-container {
+        margin: 10px 0;
+      }
+
+      .cat-image {
+        width: 120px;
+        height: 120px;
+      }
+
+      .cat-emoji {
+        font-size: 90px;
+      }
+
+      .question {
+        font-size: 20px;
+        margin: 10px 0 5px 0;
+      }
+
+      .hindi-text {
+        margin-bottom: 15px;
+      }
+
+      .buttons {
+        margin-top: 15px;
+        flex-direction: row;
+        gap: 15px;
+      }
+
+      .btn {
+        max-width: 150px;
+        padding: 10px 20px;
+      }
+
+      .romantic-content {
+        padding: 15px;
+      }
+
+      .romantic-title {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .big-heart {
+        font-size: 60px;
+        margin: 10px 0;
+      }
+
+      .romantic-message {
+        font-size: 16px;
+        margin: 8px 0;
+      }
+    }
+
+    /* Touch-friendly adjustments */
+    @media (hover: none) and (pointer: coarse) {
+      .btn {
+        min-height: 44px;
+        padding: 14px 30px;
+      }
+
+      .btn-ok {
+        min-height: 40px;
+        padding: 10px 24px;
+      }
+
+      .btn:hover {
+        transform: none;
+      }
+
+      .btn:active {
+        transform: scale(0.95);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="cat-container">
+      <div class="cat-image">
+        <div class="cat-emoji">🐱</div>
+        <div class="heart heart-1">💖</div>
+        <div class="heart heart-2">💕</div>
+      </div>
+        </div>
+
+    <h1 class="question">DO you love me? 😍</h1>
+    <p class="hindi-text">Love you my wifey</p>
+    
+    <div class="buttons">
+      <button class="btn btn-yes" id="yesBtn">Yes</button>
+      <button class="btn btn-no" id="noBtn">No</button>
+        </div>
+        </div>
+
+  <div class="confetti" id="confetti"></div>
+
+  <!-- Custom Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">127.0.0.1:5500 says</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-message" id="modalMessage">Yay! She said YES! ❤️🎉</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ok" id="okBtn">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Romantic Page -->
+  <div class="romantic-page" id="romanticPage">
+    <div class="floating-hearts" id="floatingHearts"></div>
+    <div class="sparkles" id="sparkles"></div>
+    <div class="romantic-content">
+      <h1 class="romantic-title">You Made My Day! 💕</h1>
+      <div class="big-heart">💖</div>
+      <p class="romantic-message">I'm so happy you said yes!<br>You mean the world to me 🌟</p>
+      <p class="romantic-subtitle">Forever and Always ❤️</p>
+      <p class="romantic-quote">"In your smile, I see something more beautiful than the stars." ✨</p>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const confettiContainer = document.getElementById('confetti');
+
+    function createConfetti() {
+      const colors = ['#ff6b9d', '#ff8fab', '#ffb3d9', '#ffd1dc', '#ffe5e5'];
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti-piece';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 2 + 's';
+        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+        confettiContainer.appendChild(confetti);
+        
+        setTimeout(() => {
+          confetti.remove();
+        }, 3000);
+      }
+    }
+
+    const modalOverlay = document.getElementById('modalOverlay');
+    const okBtn = document.getElementById('okBtn');
+    const romanticPage = document.getElementById('romanticPage');
+    const floatingHearts = document.getElementById('floatingHearts');
+    const sparkles = document.getElementById('sparkles');
+
+    // Create floating hearts
+    function createFloatingHearts() {
+      const hearts = ['💖', '💕', '❤️', '💗', '💝', '💓', '💞'];
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        heart.style.animationDelay = Math.random() * 2 + 's';
+        floatingHearts.appendChild(heart);
+        
+        setTimeout(() => {
+          heart.remove();
+        }, 10000);
+      }, 500);
+    }
+
+    // Create sparkles
+    function createSparkles() {
+      for (let i = 0; i < 50; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        sparkle.style.animationDelay = Math.random() * 2 + 's';
+        sparkle.style.animationDuration = (Math.random() * 1 + 1.5) + 's';
+        sparkles.appendChild(sparkle);
+      }
+    }
+
+    yesBtn.addEventListener('click', function() {
+      createConfetti();
+      yesBtn.textContent = 'Yes! 💕';
+      yesBtn.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        modalOverlay.classList.add('show');
+      }, 500);
+    });
+
+    okBtn.addEventListener('click', function() {
+      modalOverlay.classList.remove('show');
+      setTimeout(() => {
+        romanticPage.classList.add('show');
+        createFloatingHearts();
+        createSparkles();
+      }, 300);
+    });
+
+    // Close modal when clicking outside
+    modalOverlay.addEventListener('click', function(e) {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('show');
+        setTimeout(() => {
+          romanticPage.classList.add('show');
+          createFloatingHearts();
+          createSparkles();
+        }, 300);
+      }
+    });
+
+    // Function to move the No button
+    function moveNoButton() {
+      const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+      const randomX = Math.max(20, Math.min(Math.random() * maxX, maxX));
+      const randomY = Math.max(20, Math.min(Math.random() * maxY, maxY));
+      
+      // Add float animation class
+      noBtn.classList.add('moving');
+      setTimeout(() => {
+        noBtn.classList.remove('moving');
+      }, 500);
+      
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = randomX + 'px';
+      noBtn.style.top = randomY + 'px';
+    }
+
+    // Move button on hover (desktop)
+    noBtn.addEventListener('mouseenter', function() {
+      if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        moveNoButton();
+      }
+    });
+
+    // Move button on touch (mobile)
+    let touchMoved = false;
+    let touchStartTime = 0;
+    
+    noBtn.addEventListener('touchstart', function(e) {
+      touchMoved = false;
+      touchStartTime = Date.now();
+      moveNoButton();
+    }, { passive: true });
+
+    noBtn.addEventListener('touchmove', function(e) {
+      touchMoved = true;
+    }, { passive: true });
+
+    noBtn.addEventListener('touchend', function(e) {
+      const touchDuration = Date.now() - touchStartTime;
+      // If it was a quick tap (less than 300ms) and no dragging, move again
+      if (!touchMoved && touchDuration < 300) {
+        setTimeout(() => {
+          moveNoButton();
+        }, 200);
+      }
+      touchMoved = false;
+    }, { passive: true });
+
+    // Also move on click/tap for better mobile support (fallback)
+    noBtn.addEventListener('click', function(e) {
+      // Only move on touch devices
+      if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+        // Small delay to check if touch events already handled it
+        setTimeout(() => {
+          moveNoButton();
+        }, 150);
+      }
+    });
+
+    // Prevent button from going off-screen on resize
+    window.addEventListener('resize', function() {
+      if (noBtn.style.position === 'absolute') {
+        const rect = noBtn.getBoundingClientRect();
+        if (rect.left < 0) noBtn.style.left = '10px';
+        if (rect.top < 0) noBtn.style.top = '10px';
+        if (rect.right > window.innerWidth) {
+          noBtn.style.left = (window.innerWidth - noBtn.offsetWidth - 10) + 'px';
+        }
+        if (rect.bottom > window.innerHeight) {
+          noBtn.style.top = (window.innerHeight - noBtn.offsetHeight - 10) + 'px';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
